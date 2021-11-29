@@ -1,10 +1,13 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+@Entity({ name: 'jobs' })
 export class Job {
     @PrimaryGeneratedColumn()
     id!: number;
 
     @Column()
-    name?: string;
+    title!: string;
+
+    @Column()
+    orderNumber!: number;
 }

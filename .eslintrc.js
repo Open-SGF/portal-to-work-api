@@ -14,13 +14,16 @@ module.exports = {
     rules: {
         'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
         'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
+        '@typescript-eslint/no-unused-vars': ['warn', { args: 'none' }],
         'max-len': [
             'error',
             {
                 code: 100,
+                ignoreStrings: true,
+                ignoreTemplateLiterals: true,
             },
         ],
         'prettier/prettier': ['warn'],
     },
-    ignorePatterns: ['dist/**'],
+    ignorePatterns: ['build/**'],
 };

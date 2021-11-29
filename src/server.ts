@@ -1,15 +1,9 @@
-import 'reflect-metadata';
-import fastify from 'fastify';
-import fastifyTypeormPlugin from 'fastify-typeorm-plugin';
-
-import { dbConfig } from './database';
 import { SERVER_PORT } from './config';
+import { build } from './app';
 
-const server = fastify();
+const app = build({ logger: true });
 
-server.register(fastifyTypeormPlugin, dbConfig);
-
-server.listen(SERVER_PORT, (err, address) => {
+app.listen(SERVER_PORT, (err, address) => {
     if (err) {
         console.error(err);
         process.exit(1);

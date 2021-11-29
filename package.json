@@ -27,6 +27,7 @@
         "eslint": "^8.3.0",
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prettier": "^4.0.0",
+        "json-schema-to-ts": "^1.6.4",
         "nodemon": "^2.0.15",
         "prettier": "^2.5.0",
         "rimraf": "^3.0.2",
