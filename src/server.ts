@@ -1,13 +1,15 @@
 import 'reflect-metadata';
 import fastify from 'fastify';
 
+import { SERVER_PORT } from './config';
+
 const server = fastify();
 
 server.get('/ping', async (request, reply) => {
     return 'pong\n';
 });
 
-server.listen(8080, (err, address) => {
+server.listen(SERVER_PORT, (err, address) => {
     if (err) {
         console.error(err);
         process.exit(1);
