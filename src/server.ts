@@ -1,13 +1,13 @@
 import 'reflect-metadata';
 import fastify from 'fastify';
+import fastifyTypeormPlugin from 'fastify-typeorm-plugin';
 
+import { dbConfig } from './database';
 import { SERVER_PORT } from './config';
 
 const server = fastify();
 
-server.get('/ping', async (request, reply) => {
-    return 'pong\n';
-});
+server.register(fastifyTypeormPlugin, dbConfig);
 
 server.listen(SERVER_PORT, (err, address) => {
     if (err) {

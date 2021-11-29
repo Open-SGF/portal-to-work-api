@@ -1,15 +1,16 @@
-import { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } from "./config";
+import type { ConnectionOptions } from 'typeorm';
+import { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, DB_SCHEMA } from "./config";
 
-
-export default {
+export const dbConfig: ConnectionOptions = {
     type: 'postgres',
+    synchronize: false,
+    logging: false,
     host: DB_HOST,
     port: DB_PORT,
     username: DB_USER,
     password: DB_PASSWORD,
     database: DB_NAME,
-    synchronize: false,
-    logging: false,
+    schema: DB_SCHEMA,
     entities: ['src/entities/**/*.ts'],
     migrations: ['src/migrations/**/*.ts'],
     subscribers: ['src/subscribers/**/*.ts'],
@@ -18,4 +19,6 @@ export default {
         migrationsDir: 'src/migrations',
         subscribersDir: 'src/subscribers',
     },
-};
+}
+
+export default dbConfig;
