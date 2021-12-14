@@ -10,10 +10,10 @@ const redisConfig = {
     port: REDIS_PORT,
     host: REDIS_HOST,
     password: REDIS_PASSWORD,
-}
+};
 
 export const queues = {
-    jobsImport: new Queue('jobs-import', { redis: redisConfig })
+    jobsImport: new Queue('jobs-import', { redis: redisConfig }),
 } as const;
 
 export function setupQueueProcessors(): void {
@@ -27,7 +27,7 @@ export function setupRepeatingJobs(): void {
 export function setupQueueUi(app: FastifyInstance): void {
     const serverAdapter = new FastifyAdapter();
 
-    const adaptedQueues = Object.values(queues).map(queue => new BullAdapter(queue));
+    const adaptedQueues = Object.values(queues).map((queue) => new BullAdapter(queue));
 
     createBullBoard({
         queues: adaptedQueues,
@@ -36,6 +36,7 @@ export function setupQueueUi(app: FastifyInstance): void {
 
     serverAdapter.setBasePath('/queue');
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     app.register(serverAdapter.registerPlugin(), { prefix: '/queue' });
 }

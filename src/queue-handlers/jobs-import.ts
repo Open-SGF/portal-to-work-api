@@ -11,6 +11,6 @@ const jobsImport: ProcessPromiseFunction<null> = async (job) => {
     }
 
     await db.manager.find(Job);
-}
+};
 
 export default jobsImport;
