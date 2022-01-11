@@ -5,7 +5,7 @@ export class AddUsers1638842430562 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
-            `CREATE TABLE "users" ("id" SERIAL NOT NULL, "address" character varying, "latitude" numeric NOT NULL, "longitude" numeric NOT NULL, "pushToken" character varying, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`,
+            `CREATE TABLE "users" ("id" SERIAL NOT NULL, "address" character varying, "latitude" numeric, "longitude" numeric, "pushToken" character varying, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_a3ffb1c0c8416b9fc6f907b7433" PRIMARY KEY ("id"))`,
         );
     }
 

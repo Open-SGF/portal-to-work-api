@@ -1,7 +1,9 @@
 import type { FastifyPluginAsync } from 'fastify';
 import { FromSchema } from 'json-schema-to-ts';
 import fetch from 'cross-fetch';
-import { GOOGLE_RECAPTCHA_SECRET_KEY } from '../config';
+import jwt from 'jsonwebtoken';
+import { APP_SECRET_KEY, GOOGLE_RECAPTCHA_SECRET_KEY } from '../config';
+import { User } from '../entities/User';
 
 const authBodyParams = {
     type: 'object',
@@ -43,8 +45,14 @@ export const auth: FastifyPluginAsync = async (app) => {
                 return;
             }
 
+            const user = new User();
+
+            await app.orm.manager.save(user);
+
+            const userToken = jwt.sign({ user: user }, APP_SECRET_KEY);
+
             return {
-                token: 'test',
+                token: userToken,
             };
         },
     });
