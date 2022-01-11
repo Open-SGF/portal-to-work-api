@@ -15,3 +15,4 @@ export const DB_LOGGING = process.env.DB_LOGGING === 'true';
 export const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
 export const REDIS_PORT = parseNumber(process.env.REDIS_PORT) || 6379;
 export const REDIS_PASSWORD = process.env.REDIS_PASSWORD || '';
+export const GOOGLE_RECAPTCHA_SECRET_KEY = process.env.GOOGLE_RECAPTCHA_SECRET_KEY || '';
