@@ -2,9 +2,9 @@
 
 ## Prerequisites
 
-- Node 16 or greater
-- npm 8 or greater
-- PostgreSQL 14
+- Node 16
+- npm 8
+- PostgreSQL 13 or 14
 - Redis
 
 ## Environment Settup
