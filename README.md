@@ -2,8 +2,8 @@
 
 ## Prerequisites
 
-- Node 16
-- npm 8
+- Node 16.x.x
+- npm 8.x.x
 - PostgreSQL 13 or 14
 - Redis
 
