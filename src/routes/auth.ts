@@ -22,7 +22,7 @@ export interface IRecaptchaResponse {
     error_codes?: string[];
 }
 
-export const auth: FastifyPluginAsync = async (app) => {
+export const authRoutes: FastifyPluginAsync = async (app) => {
     app.route<{ Body: FromSchema<typeof authBodyParams> }>({
         url: '/',
         method: 'POST',

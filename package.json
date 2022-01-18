@@ -18,6 +18,8 @@
         "cross-fetch": "^3.1.4",
         "dotenv": "^10.0.0",
         "fastify": "^3.24.0",
+        "fastify-auth": "^1.1.0",
+        "fastify-plugin": "^3.0.0",
         "fastify-typeorm-plugin": "^2.2.0",
         "jsonwebtoken": "^8.5.1",
         "pg": "^8.7.1",
