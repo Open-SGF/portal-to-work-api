@@ -11,6 +11,9 @@ export function _throw(msg: string): never {
     throw msg;
 }
 
+// TODO: Query the database for address first, then hit the database.
+// TODO: Move this to a dedicated services file
+
 export async function getCoordsFromAddress(address: string): Promise<any> {
     const urlAddress = address.replace(/ /g, "%20");
     const requestUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${urlAddress}&key=${GOOGLE_GEOCODING_SECRET_KEY}`
