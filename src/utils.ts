@@ -11,7 +11,8 @@ export function _throw(msg: string): never {
     throw msg;
 }
 
-// TODO: Query the database for address first, then hit the database.
+// TODO: Query the database for address first, then hit the database.:q
+
 // TODO: Move this to a dedicated services file
 
 export async function getCoordsFromAddress(address: string): Promise<any> {
