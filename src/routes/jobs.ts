@@ -3,6 +3,7 @@ import type { FromSchema } from 'json-schema-to-ts';
 import { Job } from '../entities/Job';
 import { Container } from 'typedi';
 import { EntityManager } from 'typeorm';
+import GeocodingService from "../services/GeocodingService";
 
 const findJobParams = {
     type: 'object',
@@ -36,6 +37,7 @@ export const jobRoutes: FastifyPluginAsync = async (app) => {
             const idOrIds = req.query['ids[]'];
 
             const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds];
+            GeocodingService.getCoordsFromAddress('1840 S Weller Ave, Springfield, MO 65804');
 
             const manager = Container.get(EntityManager);
             return await manager.findByIds(Job, ids);
