@@ -18,4 +18,4 @@ export const REDIS_HOST = process.env.REDIS_HOST || 'localhost';
 export const REDIS_PORT = parseNumber(process.env.REDIS_PORT) || 6379;
 export const REDIS_PASSWORD = process.env.REDIS_PASSWORD || '';
 export const GOOGLE_RECAPTCHA_SECRET_KEY = process.env.GOOGLE_RECAPTCHA_SECRET_KEY || '';
-export const GOOGLE_GEOCODING_SECRET_KEY = process.env.GOOGLE_GEOCODING_SECRET_KEY || '';
+export const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY || '';
