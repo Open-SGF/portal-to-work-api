@@ -14,11 +14,11 @@ export class User {
     @Column({ nullable: true })
     address?: string;
 
-    @Column({ type: 'decimal' })
-    latitude!: number;
+    @Column({ type: 'decimal', nullable: true })
+    latitude?: number;
 
-    @Column({ type: 'decimal' })
-    longitude!: number;
+    @Column({ type: 'decimal', nullable: true })
+    longitude?: number;
 
     @Column({ nullable: true })
     pushToken?: string;

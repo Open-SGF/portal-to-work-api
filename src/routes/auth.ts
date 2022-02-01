@@ -2,6 +2,7 @@ import type { FastifyPluginAsync } from 'fastify';
 import { FromSchema } from 'json-schema-to-ts';
 import fetch from 'cross-fetch';
 import { GOOGLE_RECAPTCHA_SECRET_KEY } from '../config';
+import { User } from '../entities/User';
 
 const authBodyParams = {
     type: 'object',
@@ -20,7 +21,7 @@ export interface IRecaptchaResponse {
     error_codes?: string[];
 }
 
-export const auth: FastifyPluginAsync = async (app) => {
+export const authRoutes: FastifyPluginAsync = async (app) => {
     app.route<{ Body: FromSchema<typeof authBodyParams> }>({
         url: '/',
         method: 'POST',
@@ -43,8 +44,14 @@ export const auth: FastifyPluginAsync = async (app) => {
                 return;
             }
 
+            const user = new User();
+
+            await app.orm.manager.save(user);
+
+            const userToken = app.jwt.sign({ user: user });
+
             return {
-                token: 'test',
+                token: userToken,
             };
         },
     });

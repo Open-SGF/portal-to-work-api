@@ -3,16 +3,19 @@ import fastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
 import fastifyTypeorm from 'fastify-typeorm-plugin';
 
 import { dbConfig } from './database';
-import { jobs } from './routes/jobs';
-import { auth } from './routes/auth';
+import { jobRoutes } from './routes/jobs';
+import { authRoutes } from './routes/auth';
+import { authPlugin } from './plugins/auth';
 
 export function build(opts: FastifyServerOptions = {}): FastifyInstance {
     const app = fastify(opts);
 
     app.register(fastifyTypeorm, dbConfig);
 
-    app.register(jobs, { prefix: '/jobs' });
-    app.register(auth, { prefix: '/auth' });
+    app.register(authPlugin);
+
+    app.register(jobRoutes, { prefix: '/jobs' });
+    app.register(authRoutes, { prefix: '/auth' });
 
     return app;
 }

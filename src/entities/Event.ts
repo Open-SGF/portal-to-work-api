@@ -8,7 +8,6 @@ import {
 } from 'typeorm';
 import { Company } from './Company';
 import { Location } from './Location';
-import { Occupation } from './Occupation';
 
 @Entity({ name: 'events' })
 export class Event {
