@@ -1,7 +1,7 @@
-import { FastifyAuthFunction } from 'fastify-auth';
+import { preHandlerHookHandler } from 'fastify';
 
 declare module 'fastify' {
     export interface FastifyInstance {
-        verifyJwt: FastifyAuthFunction;
+        authenticate: preHandlerHookHandler;
     }
 }

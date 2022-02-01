@@ -25,7 +25,7 @@ const findJobidsParams = {
 } as const;
 
 export const jobs: FastifyPluginAsync = async (app) => {
-    app.addHook('preHandler', app.auth([app.verifyJwt]));
+    app.addHook('preHandler', app.authenticate);
 
     app.route<{ Querystring: FromSchema<typeof findJobidsParams> }>({
         url:'/',
