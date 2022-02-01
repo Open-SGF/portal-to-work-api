@@ -47,6 +47,12 @@ export const jobRoutes: FastifyPluginAsync = async (app) => {
         handler: async (req, reply) => {
             const jobId = req.params.jobId;
             const job = await app.orm.manager.findOne(Job, jobId);
+
+            if (!job) {
+                reply.code(404);
+                throw new Error(`job with id ${jobId} not found`);
+            }
+
             return job;
         },
     });
