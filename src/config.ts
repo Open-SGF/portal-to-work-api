@@ -3,7 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const APP_SECRET_KEY = process.env.APP_SECRET_KEY || _throw('APP_SECRET_KEY env variable not set');
+export const APP_SECRET_KEY =
+    process.env.APP_SECRET_KEY || _throw('APP_SECRET_KEY env variable not set');
 export const SERVER_LOGGING = process.env.SERVER_LOGGING === 'true';
 export const SERVER_PORT = parseNumber(process.env.SERVER_PORT) || 3000;
 export const DB_HOST = process.env.DB_HOST || 'localhost';
