@@ -48,7 +48,7 @@ export const authRoutes: FastifyPluginAsync = async (app) => {
 
             await app.orm.manager.save(user);
 
-            const userToken = app.jwt.sign({ user: user });
+            const userToken = app.jwt.sign({ user: user }, { expiresIn: '7d' });
 
             return {
                 token: userToken,
