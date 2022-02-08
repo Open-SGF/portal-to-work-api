@@ -1,16 +1,17 @@
 import 'reflect-metadata';
 import fastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
-import fastifyTypeorm from 'fastify-typeorm-plugin';
 
-import { dbConfig } from './database';
 import { jobRoutes } from './routes/jobs';
 import { authRoutes } from './routes/auth';
 import { authPlugin } from './plugins/auth';
+import { setupQueues } from './queue';
+import { setupDatabase } from './database';
 
-export function build(opts: FastifyServerOptions = {}): FastifyInstance {
+export async function build(opts: FastifyServerOptions = {}): Promise<FastifyInstance> {
     const app = fastify(opts);
 
-    app.register(fastifyTypeorm, dbConfig);
+    await setupDatabase(app);
+    setupQueues(app);
 
     app.register(authPlugin);
 

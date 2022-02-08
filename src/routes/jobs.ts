@@ -1,6 +1,8 @@
 import type { FastifyPluginAsync } from 'fastify';
 import type { FromSchema } from 'json-schema-to-ts';
 import { Job } from '../entities/Job';
+import { Container } from 'typedi';
+import { EntityManager } from 'typeorm';
 
 const findJobParams = {
     type: 'object',
@@ -35,8 +37,8 @@ export const jobRoutes: FastifyPluginAsync = async (app) => {
 
             const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds];
 
-            const jobs = await app.orm.manager.findByIds(Job, ids);
-            return jobs;
+            const manager = Container.get(EntityManager);
+            return await manager.findByIds(Job, ids);
         },
     });
 
@@ -46,7 +48,8 @@ export const jobRoutes: FastifyPluginAsync = async (app) => {
         schema: { params: findJobParams },
         handler: async (req, reply) => {
             const jobId = req.params.jobId;
-            const job = await app.orm.manager.findOne(Job, jobId);
+            const manager = Container.get(EntityManager);
+            const job = await manager.findOne(Job, jobId);
 
             if (!job) {
                 reply.code(404);
