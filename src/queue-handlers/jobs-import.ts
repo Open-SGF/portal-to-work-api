@@ -1,16 +1,12 @@
 import type { ProcessPromiseFunction } from 'bull';
-import { Connection, createConnection } from 'typeorm';
-import dbConfig from '../database';
+import { EntityManager } from 'typeorm';
 import { Job } from '../entities/Job';
-
-let db: Connection;
+import { Container } from 'typedi';
 
 const jobsImport: ProcessPromiseFunction<null> = async (job) => {
-    if (!db) {
-        db = await createConnection(dbConfig);
-    }
+    const manager = Container.get(EntityManager);
 
-    await db.manager.find(Job);
+    await manager.find(Job);
 };
 
 export default jobsImport;

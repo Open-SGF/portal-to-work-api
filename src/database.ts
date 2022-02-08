@@ -1,5 +1,9 @@
 import type { ConnectionOptions } from 'typeorm';
+import type { FastifyInstance } from 'fastify';
 import { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, DB_SCHEMA, DB_LOGGING } from './config';
+import { ConnectionManager, createConnection, EntityManager, useContainer } from 'typeorm';
+import { Container as TypeormContainer } from 'typeorm-typedi-extensions';
+import { Container } from 'typedi';
 
 export const dbConfig: ConnectionOptions = {
     type: 'postgres',
@@ -20,5 +24,15 @@ export const dbConfig: ConnectionOptions = {
         subscribersDir: 'src/subscribers',
     },
 };
+
+export async function setupDatabase(app: FastifyInstance): Promise<void> {
+    useContainer(TypeormContainer);
+
+    await createConnection(dbConfig);
+
+    const connectionManager = Container.get(ConnectionManager);
+
+    Container.set(EntityManager, connectionManager.get('default').manager);
+}
 
 export default dbConfig;

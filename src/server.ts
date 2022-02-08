@@ -1,15 +1,17 @@
 import { SERVER_LOGGING, SERVER_PORT } from './config';
 import { build } from './app';
-import { setupQueues } from './queue';
+import 'reflect-metadata';
 
-const app = build({ logger: SERVER_LOGGING });
+async function start() {
+    const app = await build({ logger: SERVER_LOGGING });
 
-setupQueues(app);
+    app.listen(SERVER_PORT, (err, address) => {
+        if (err) {
+            console.error(err);
+            process.exit(1);
+        }
+        console.log(`Server listening at ${address}`);
+    });
+}
 
-app.listen(SERVER_PORT, (err, address) => {
-    if (err) {
-        console.error(err);
-        process.exit(1);
-    }
-    console.log(`Server listening at ${address}`);
-});
+start();
