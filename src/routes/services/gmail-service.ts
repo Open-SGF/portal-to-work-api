@@ -1,9 +1,8 @@
 import path from 'path';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 import { gmail_v1, google, GoogleApis } from 'googleapis';
 import { authenticate } from '@google-cloud/local-auth';
 import xlsx from 'xlsx';
-import { OAuth2Client } from 'google-auth-library';
+// import { OAuth2Client } from 'google-auth-library';
 import { GaxiosPromise } from 'googleapis/build/src/apis/accesscontextmanager';
 
 export async function fetchExcelFileFromEmailInbox(): Promise<any> {
@@ -12,7 +11,7 @@ export async function fetchExcelFileFromEmailInbox(): Promise<any> {
     const senderEmail = process.env.JOBS_DATA_SENDER_EMAIL_ADDRESS;
 
     if (!senderEmail) {
-        return
+        return;
     }
 
     const latestEmail = await fetchLatestEmailBySender(gmail, senderEmail);
