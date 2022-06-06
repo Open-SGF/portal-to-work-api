@@ -36,8 +36,9 @@ export const jobRoutes: FastifyPluginAsync = async (app) => {
         handler: async (req, reply) => {
             const idOrIds = req.query['ids[]'];
 
-            const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds];
-            GeocodingService.getCoordsFromAddress('1840 S Weller Ave, Springfield, MO 65804');
+            const geoCodingService = new GeocodingService(app.orm);
+
+            const ids = Array.isArray(idOrIds) ? idOrIds : [idOrIds]
 
             const manager = Container.get(EntityManager);
             return await manager.findByIds(Job, ids);

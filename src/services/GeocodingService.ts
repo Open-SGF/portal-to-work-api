@@ -1,14 +1,25 @@
 import {GOOGLE_MAPS_API_KEY} from "../config";
 import fetch from "cross-fetch";
+import {Connection} from "typeorm";
+import {Location} from "../entities/Location";
+import {getManager} from "typeorm";
 
 export default class GeocodingService {
-    constructor (app) {
-        this.app = app;
+    private orm: Connection;
+
+    constructor (orm: Connection) {
+        this.orm = orm;
     }
 
     public async getCoordsFromAddress (address: string) {
         // Check the database for any coords associated with this address.
-        let coords = await app.orm.manager.findByAddress(address);
+        const location = await getManager()
+            .createQueryBuilder(Location, "locations")
+            .where("locations.address = :address", {
+                address: '1840 S Weller Ave, Springfield, MO 65804'
+            })
+            .getOne();
+
         // Otherwise, ask Google for the coords of this address.
         if (!coords) {
             const urlAddress = encodeURIComponent(address.trim());
@@ -29,6 +40,6 @@ export default class GeocodingService {
             }
         }
 
-        return coords;
+        return true;
     }
 }
