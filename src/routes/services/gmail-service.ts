@@ -1,34 +1,27 @@
 import path from 'path';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-import { gmail_v1, google } from 'googleapis';
+import { gmail_v1, google, GoogleApis } from 'googleapis';
 import { authenticate } from '@google-cloud/local-auth';
 import xlsx from 'xlsx';
 import { OAuth2Client } from 'google-auth-library';
+import { GaxiosPromise } from 'googleapis/build/src/apis/accesscontextmanager';
 
-export async function fetchExcelFileFromEmailInbox(): Promise<xlsx.WorkBook | undefined> {
-    const gmail = google.gmail('v1');
+export async function fetchExcelFileFromEmailInbox(): Promise<any> {
+    const gmail = await initializeGmailInstance(google);
 
-    // TODO: look into refresh tokens.
-    const auth = await authenticate({
-        keyfilePath: path.join(__dirname, '../../../oauth2.keys.json'),
-        scopes: 'https://www.googleapis.com/auth/gmail.readonly',
-    });
+    const senderEmail = process.env.JOBS_DATA_SENDER_EMAIL_ADDRESS;
 
-    google.options({ auth });
+    if (!senderEmail) {
+        return
+    }
 
-    const emailId: string | undefined = await getLatestEmailIdFromSender(gmail);
+    const latestEmail = await fetchLatestEmailBySender(gmail, senderEmail);
 
-    if (!emailId) {
+    if (!latestEmail) {
         return;
     }
 
-    const attachmentId: string | undefined = await getEmailAttachmentId(gmail, emailId);
-
-    if (!attachmentId) {
-        return;
-    }
-
-    const attachment: string | undefined = await getAttachment(gmail, emailId, attachmentId);
+    const attachment = await fetchAttachmentFromEmail(gmail, latestEmail);
 
     if (!attachment) {
         return;
@@ -37,38 +30,75 @@ export async function fetchExcelFileFromEmailInbox(): Promise<xlsx.WorkBook | un
     return convertToXLSXInstance(attachment);
 }
 
-// TODO: add sender filtering.
-async function getLatestEmailIdFromSender(gmail: gmail_v1.Gmail): Promise<string | undefined> {
-    const response = await gmail.users.messages.list({ userId: 'me' });
+async function initializeGmailInstance(google: GoogleApis): Promise<gmail_v1.Gmail> {
+    // TODO: look into refresh tokens.
+    const auth = await authenticate({
+        keyfilePath: path.join(__dirname, '../../../oauth2.keys.json'),
+        scopes: 'https://www.googleapis.com/auth/gmail.readonly',
+    });
 
-    const allMessages = response.data.messages ?? [];
+    google.options({ auth });
 
-    console.log(allMessages);
-
-    return allMessages[0].id ?? undefined;
+    return google.gmail('v1');
 }
 
-async function getEmailAttachmentId(
+async function fetchLatestEmailBySender(gmail: gmail_v1.Gmail, senderEmail: string) {
+    const emailIds = await fetchAllEmailIds(gmail);
+
+    if (!emailIds) {
+        return;
+    }
+
+    const emails = await fetchAllEmails(gmail, emailIds);
+
+    const sendersEmails = emails.filter((email: any) => {
+        return email?.data?.payload?.headers.some((header: any) => {
+            return header.name === 'From' && header.value.includes(senderEmail);
+        });
+    });
+
+    return sendersEmails[0];
+}
+
+async function fetchAllEmailIds(gmail: gmail_v1.Gmail): Promise<Array<string> | undefined> {
+    const response = await gmail.users.messages.list({ userId: 'me' });
+
+    const messages = response.data.messages ?? [];
+
+    return messages
+        .filter(Boolean)
+        .map((res) => res.id)
+        .map(String);
+}
+
+async function fetchAllEmails(gmail: gmail_v1.Gmail, emailIds: Array<string>): Promise<any> {
+    return await Promise.all(emailIds.map((id) => fetchEmail(gmail, id)));
+}
+
+async function fetchEmail(
     gmail: gmail_v1.Gmail,
     messageId: string,
-): Promise<string | undefined> {
-    const fullMessage = await gmail.users.messages.get({
+): Promise<GaxiosPromise<gmail_v1.Schema$Message>> {
+    return await gmail.users.messages.get({
         userId: 'me',
         id: messageId,
         format: 'full',
     });
-
-    return fullMessage?.data?.payload?.parts?.[1]?.body?.attachmentId ?? undefined;
 }
 
-async function getAttachment(
+async function fetchAttachmentFromEmail(
     gmail: gmail_v1.Gmail,
-    messageId: string,
-    attachmentId: string,
+    email: any,
 ): Promise<string | undefined> {
+    const attachmentId = email?.data?.payload?.parts?.[1]?.body?.attachmentId ?? undefined;
+
+    if (!attachmentId) {
+        return;
+    }
+
     const attachmentResponse = await gmail.users.messages.attachments.get({
         id: attachmentId,
-        messageId: messageId,
+        messageId: email.data.id,
         userId: 'me',
     });
 
@@ -80,6 +110,5 @@ function convertToXLSXInstance(responseData: string): xlsx.WorkBook {
 }
 
 function base64UrlDecode(base64UrlData: string): string {
-    return base64UrlData.replace(/_/g, '/')
-        .replace(/-/g, '+');
+    return base64UrlData.replace(/_/g, '/').replace(/-/g, '+');
 }
