@@ -3,6 +3,7 @@ import type { FromSchema } from 'json-schema-to-ts';
 import { Job } from '../entities/Job';
 import { Container } from 'typedi';
 import { EntityManager } from 'typeorm';
+import { fetchExcelFileFromEmailInbox } from './services/gmail-service';
 
 const findJobParams = {
     type: 'object',
@@ -12,6 +13,7 @@ const findJobParams = {
     required: ['jobId'],
 } as const;
 
+fetchExcelFileFromEmailInbox();
 const findJobidsParams = {
     type: 'object',
     properties: {
